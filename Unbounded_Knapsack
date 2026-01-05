@@ -1,0 +1,32 @@
+UNBOUNDED KNAPSACK
+1.	MinSubsetDiff
+public class MinSubsetDiff {
+    public static int minSubsetSumDiff(int[] arr) {
+        int n = arr.length;
+        int total = 0;
+        for (int num : arr) total += num;
+        int target = total / 2;
+        boolean[][] dp = new boolean[n + 1][target + 1];
+        for (int i = 0; i <= n; i++) {
+            dp[i][0] = true;
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int s = 1; s <= target; s++) {
+                dp[i][s] = dp[i-1][s]; // exclude
+                if (s >= arr[i-1]) {
+                    dp[i][s] = dp[i][s] || dp[i-1][s - arr[i-1]]; 
+                }
+            }
+        }
+        int best = 0;
+        for (int s = target; s >= 0; s--) {
+            if (dp[n][s]) {
+                best = s;
+                break;
+            }
+        }
+        int subset1 = best;
+        int subset2 = total - best;
+        return Math.abs(subset1 - subset2);
+    }
+}
